@@ -3,13 +3,15 @@ import 'package:flutter/material.dart';
 
 abstract class AppColors {
   // Paleta principal
-  static const Color darkGrey = Color(0xFF545454); // #545454 (Fondo principal)
+  static const Color darkGrey = Color(0xFF7E7D82); // #545454 (Fondo principal)
   static const Color mutedGreen = Color(
     0xFF7B8A84,
   ); // #7b8a84 (Elementos secundarios)
-  static const Color teal = Color(0xFF8CBFAD); // #8cbfaf (Acentos)
-  static const Color cream = Color(0xFFEDE7D5); // #ede7d5 (Textos/Highlights)
-  static const Color lime = Color(0xFFB7CC18); // #b7cc18 (Botones primarios)
+  static const Color teal = Color(0xFF7E7D82); // #8cbfaf (Acentos)
+  static const Color cream = Color(0xFFD6D5D7); // #ede7d5 (Textos/Highlights)
+  static const Color lime = Color(0xFF7E7D82); // #b7cc18 (Botones primarios)
+  static const Color aguamarina = Color(0xFF01d1db); // Acento
+  static const Color lightcoral = Color(0xFFF08080); // Acento
 
   static const LinearGradient backgroundGradient = LinearGradient(
     begin: Alignment.topCenter,

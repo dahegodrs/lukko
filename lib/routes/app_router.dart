@@ -4,12 +4,16 @@ import '../presentation/screens/auth/login_screen.dart';
 import '../presentation/screens/home/home_screen.dart';
 import '../presentation/screens/transactions/add_transaction_screen.dart';
 import '../../../core/theme/app_colors.dart';
+import '../presentation/screens/account/account_list_screen.dart';
+import '../presentation/screens/newaccounts/new_account.dart';
 
 class AppRouter {
   // Definimos rutas como constantes
   static const String login = '/';
   static const String home = '/home';
   static const String addTransaction = '/add-transaction';
+  static const String accountList = '/account-list';
+  static const String newAccount = '/new-account';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -19,6 +23,10 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const HomeScreen());
       case addTransaction:
         return MaterialPageRoute(builder: (_) => const AddTransactionScreen());
+      case accountList:
+        return MaterialPageRoute(builder: (_) => const AccountListScreen());
+      case newAccount:
+        return MaterialPageRoute(builder: (_) => const NewAccountScreen());
       default:
         return _errorRoute(settings.name ?? 'unknown');
     }
