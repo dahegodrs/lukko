@@ -1,10 +1,17 @@
 // lib/main.dart
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'core/theme/app_theme.dart';
-import 'routes/app_router.dart'; // Importa el router
+import 'routes/app_router.dart';
+import 'presentation/blocs/cuentas_provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [ChangeNotifierProvider(create: (_) => CuentasProvider())],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -16,10 +23,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
-      initialRoute:
-          AppRouter.login, // Usa la ruta inicial definida en AppRouter
-      onGenerateRoute:
-          AppRouter.generateRoute, // Configura el generador de rutas
+      initialRoute: AppRouter.login, // Ruta inicial
+      onGenerateRoute: AppRouter.generateRoute, // Configuración de rutas
     );
   }
 }

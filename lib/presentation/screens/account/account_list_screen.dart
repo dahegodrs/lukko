@@ -1,195 +1,199 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:lukko/presentation/blocs/cuentas_provider.dart';
+import 'package:lukko/presentation/screens/newaccounts/new_account.dart';
+import 'package:lukko/domain/entities/cuenta.dart';
 import 'package:lukko/core/theme/app_colors.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class AccountListScreen extends StatefulWidget {
-  const AccountListScreen({super.key});
-
-  @override
-  State<AccountListScreen> createState() => _AccountListScreenState();
+IconData obtenerIconoRed(String red) {
+  switch (red.toLowerCase()) {
+    case 'visa':
+      return FontAwesomeIcons.ccVisa;
+    case 'mastercard':
+      return FontAwesomeIcons.ccMastercard;
+    case 'amex':
+      return FontAwesomeIcons.ccAmex;
+    case 'diners club':
+      return FontAwesomeIcons.ccDinersClub;
+    case 'maestro':
+      return FontAwesomeIcons.ccMastercard;
+    case 'discover':
+      return FontAwesomeIcons.ccDiscover;
+    default:
+      return Icons.credit_card; // Ícono genérico
+  }
 }
 
-class _AccountListScreenState extends State<AccountListScreen> {
-  // Lista inicial de cuentas
-  List<Map<String, String>> cuentas = [
-    {'nombre': 'Cuenta Nómina', 'cupo': '\$3.000.000', 'deuda': '\$800.000'},
-    {'nombre': 'Cuenta Ahorros', 'cupo': '\$1.000.000', 'deuda': '\$200.000'},
-    {
-      'nombre': 'Cuenta Corriente',
-      'cupo': '\$2.500.000',
-      'deuda': '\$1.100.000',
-    },
-  ];
+class AccountListScreen extends StatelessWidget {
+  const AccountListScreen({super.key});
 
-  // Función para abrir pantalla de nueva cuenta y esperar resultado
-  Future<void> _agregarNuevaCuenta() async {
-    final nuevaCuenta = await Navigator.pushNamed(context, '/new-account');
-
-    if (nuevaCuenta != null && nuevaCuenta is Map<String, String>) {
-      setState(() {
-        cuentas.add(nuevaCuenta);
-      });
-    }
+  String _formatearMoneda(int valor) {
+    return '\$${valor.toString().replaceAllMapped(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}';
   }
 
   @override
   Widget build(BuildContext context) {
+    final cuentasProvider = Provider.of<CuentasProvider>(context);
+
     return Scaffold(
       backgroundColor: AppColors.darkGrey,
       appBar: AppBar(
-        title: const Text("Listado de cuentas"),
+        title: const Text('Listado de cuentas'),
         backgroundColor: AppColors.darkGrey,
         foregroundColor: Colors.white,
         elevation: 0,
       ),
-      body: ListView.builder(
-        padding: const EdgeInsets.all(16),
-        itemCount: cuentas.length,
-        itemBuilder: (context, index) {
-          final cuenta = cuentas[index];
-          return Card(
-            color: Colors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
-            margin: const EdgeInsets.only(bottom: 16),
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    cuenta['nombre'] ?? '',
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.primary,
-                    ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Consumer<CuentasProvider>(
+          builder: (context, provider, _) {
+            final cuentas = provider.cuentas;
+
+            return ListView.builder(
+              itemCount: cuentas.length,
+              itemBuilder: (context, index) {
+                final cuenta = cuentas[index];
+                return Card(
+                  color: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
                   ),
-                  const SizedBox(height: 8),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        "Cupo total:",
-                        style: TextStyle(color: AppColors.primary),
-                      ),
-                      Text(
-                        cuenta['cupo'] ?? '',
-                        style: const TextStyle(
-                          color: AppColors.aguamarina,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 4),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        "Deuda total:",
-                        style: TextStyle(color: AppColors.primary),
-                      ),
-                      Text(
-                        cuenta['deuda'] ?? '',
-                        style: const TextStyle(
-                          color: AppColors.lightcoral,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: IconButton(
-                      onPressed: () {
-                        // Aquí puedes implementar la vista detallada de la cuenta
-                        // Por ahora solo un snackbar para demo
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              'Ver detalles de "${cuenta['nombre']}"',
+                  margin: const EdgeInsets.only(bottom: 16),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                cuenta.nombre,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.darkGrey,
+                                  shadows: [
+                                    Shadow(
+                                      color: Colors.black26,
+                                      offset: Offset(1, 1),
+                                      blurRadius: 2,
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
+                            Icon(
+                              obtenerIconoRed(cuenta.red),
+                              color: Color(0xFFA8A8A8),
+                              size: 20,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 6),
+                        RichText(
+                          text: TextSpan(
+                            children: [
+                              const TextSpan(
+                                text: 'Cupo: ',
+                                style: TextStyle(
+                                  color: AppColors.primary,
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              TextSpan(
+                                text: _formatearMoneda(cuenta.cupo),
+                                style: const TextStyle(
+                                  color: Colors.greenAccent,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
                           ),
-                        );
-                      },
-                      icon: const Icon(
-                        Icons.visibility,
-                        color: AppColors.primary,
-                        size: 28,
-                      ),
-                      tooltip: 'Ver cuenta',
+                        ),
+                        const SizedBox(height: 6),
+                        Row(
+                          children: [
+                            RichText(
+                              text: TextSpan(
+                                children: [
+                                  const TextSpan(
+                                    text: 'Deuda: ',
+                                    style: TextStyle(
+                                      color: AppColors.primary,
+                                      fontWeight: FontWeight.normal,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: _formatearMoneda(cuenta.deuda),
+                                    style: const TextStyle(
+                                      color: Colors.redAccent,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const Spacer(),
+                            IconButton(
+                              icon: const Icon(
+                                Icons.remove_red_eye,
+                                color: Color(0xFFA8A8A8),
+                              ),
+                              onPressed: () {
+                                debugPrint('Ver detalles de ${cuenta.nombre}');
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
-            ),
-          );
+                );
+              },
+            );
+          },
+        ),
+      ),
+
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.white,
+        selectedItemColor: const Color.fromRGBO(1, 209, 219, 1),
+        unselectedItemColor: Colors.grey,
+        currentIndex: 1, // puedes manejar el índice si quieres
+        onTap: (index) async {
+          switch (index) {
+            case 0:
+              Navigator.pop(
+                context,
+              ); // O ir a la pantalla home si tienes ruta nombrada
+              break;
+            case 1:
+              final nuevaCuenta = await Navigator.push<Cuenta>(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const NewAccountScreen(),
+                ),
+              );
+              if (nuevaCuenta != null) {
+                cuentasProvider.agregarCuenta(nuevaCuenta);
+              }
+              break;
+            case 2:
+              // Aquí pon la navegación al menú o configuración
+              // Por ejemplo:
+              // Navigator.pushNamed(context, '/menu');
+              break;
+          }
         },
-      ),
-      bottomNavigationBar: CustomBottomNavWithAdd(
-        onAddPressed: _agregarNuevaCuenta,
-      ),
-    );
-  }
-}
-
-class CustomBottomNavWithAdd extends StatelessWidget {
-  final VoidCallback onAddPressed;
-
-  const CustomBottomNavWithAdd({super.key, required this.onAddPressed});
-
-  @override
-  Widget build(BuildContext context) {
-    return BottomAppBar(
-      color: Colors.white,
-      child: SizedBox(
-        height: kBottomNavigationBarHeight,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            _buildNavItem(
-              icon: Icons.home,
-              label: "Inicio",
-              onTap: () => Navigator.pushNamed(context, '/home'),
-            ),
-            _buildNavItem(
-              icon: Icons.add,
-              label: "Agregar",
-              onTap: onAddPressed,
-            ),
-            _buildNavItem(
-              icon: Icons.menu,
-              label: "Menú",
-              onTap: () => Navigator.pushNamed(context, '/menu'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildNavItem({
-    required IconData icon,
-    required String label,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: SizedBox(
-        height: kBottomNavigationBarHeight,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, color: AppColors.primary, size: 25),
-            const SizedBox(height: 2),
-            Text(
-              label,
-              style: const TextStyle(color: AppColors.primary, fontSize: 10),
-            ),
-          ],
-        ),
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Inicio'),
+          BottomNavigationBarItem(icon: Icon(Icons.add), label: 'Agregar'),
+          BottomNavigationBarItem(icon: Icon(Icons.menu), label: 'Menú'),
+        ],
       ),
     );
   }

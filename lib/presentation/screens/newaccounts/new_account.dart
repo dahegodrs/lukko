@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lukko/core/theme/app_colors.dart';
+import 'package:provider/provider.dart';
+import 'package:lukko/domain/entities/cuenta.dart';
+import 'package:lukko/presentation/blocs/cuentas_provider.dart';
 
 class NewAccountScreen extends StatefulWidget {
   const NewAccountScreen({super.key});
@@ -26,13 +29,19 @@ class _NewAccountScreenState extends State<NewAccountScreen> {
 
   void _guardarCuenta() {
     if (_formKey.currentState!.validate()) {
-      final nuevaCuenta = {
-        'nombre': _nombreController.text,
-        'cupo': '\$${_cupoController.text}',
-        'deuda': '\$${_deudaController.text}',
-        'red': _selectedRed,
-      };
-      Navigator.pop(context, nuevaCuenta); // Devuelve la cuenta creada
+      final nuevaCuenta = Cuenta(
+        nombre: _nombreController.text,
+        cupo: int.tryParse(_cupoController.text) ?? 0,
+        deuda: int.tryParse(_deudaController.text) ?? 0,
+        red: _selectedRed,
+      );
+
+      Provider.of<CuentasProvider>(
+        context,
+        listen: false,
+      ).agregarCuenta(nuevaCuenta);
+
+      Navigator.pop(context);
     }
   }
 

@@ -1,10 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:lukko/presentation/blocs/cuentas_provider.dart';
 
 class FinancialSummaryCard extends StatelessWidget {
   const FinancialSummaryCard({super.key});
 
+  String _formatearMoneda(int valor) {
+    return '\$${valor.toString().replaceAllMapped(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}';
+  }
+
   @override
   Widget build(BuildContext context) {
+    final cuentasProvider = context.watch<CuentasProvider>();
+    final cupoTotal = cuentasProvider.sumaCupo;
+    final deudaTotal = cuentasProvider.sumaDeuda;
+
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       elevation: 6,
@@ -25,19 +35,33 @@ class FinancialSummaryCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  'LUKKO Balance',
+                Text(
+                  'Lukko Balance',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 22,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFFD4AF37), // Dorado metálico
-                    letterSpacing: 1.5,
+                    color: Color(0xFFD4AF37),
+                    shadows: [
+                      Shadow(
+                        color: Colors.grey.withAlpha(77),
+                        blurRadius: 4,
+                        offset: const Offset(1, 2),
+                      ),
+                    ],
                   ),
                 ),
-                Image.asset(
-                  'assets/images/mastercard.png',
-                  width: 40,
-                  height: 40,
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 4,
+                  ),
+                  child: const Text(
+                    'PREMIUM',
+                    style: TextStyle(
+                      color: Color(0xFFA8A8A8),
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -45,8 +69,8 @@ class FinancialSummaryCard extends StatelessWidget {
 
             // Cupo total disponible
             Row(
-              children: const [
-                Text(
+              children: [
+                const Text(
                   "Cupo total disponible:",
                   style: TextStyle(
                     fontSize: 16,
@@ -54,10 +78,10 @@ class FinancialSummaryCard extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Spacer(),
+                const Spacer(),
                 Text(
-                  "\$4.500.000",
-                  style: TextStyle(
+                  _formatearMoneda(cupoTotal),
+                  style: const TextStyle(
                     fontSize: 16,
                     color: Colors.greenAccent,
                     fontWeight: FontWeight.bold,
@@ -70,8 +94,8 @@ class FinancialSummaryCard extends StatelessWidget {
 
             // Deuda total actual
             Row(
-              children: const [
-                Text(
+              children: [
+                const Text(
                   "Deuda total actual:",
                   style: TextStyle(
                     fontSize: 16,
@@ -79,10 +103,10 @@ class FinancialSummaryCard extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Spacer(),
+                const Spacer(),
                 Text(
-                  "\$1.200.000",
-                  style: TextStyle(
+                  _formatearMoneda(deudaTotal),
+                  style: const TextStyle(
                     fontSize: 16,
                     color: Colors.redAccent,
                     fontWeight: FontWeight.bold,
@@ -101,7 +125,7 @@ class FinancialSummaryCard extends StatelessWidget {
                 Expanded(
                   child: Text(
                     '4567 8910 1123 4594',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 16,
                       color: Colors.white,
                       letterSpacing: 1.5,
@@ -116,11 +140,9 @@ class FinancialSummaryCard extends StatelessWidget {
                   },
                   icon: const Icon(Icons.remove_red_eye_outlined),
                   color: Colors.white70,
-                  iconSize: 24, // puedes ajustar tamaño si quieres
-                  padding: EdgeInsets
-                      .zero, // quita padding extra para que quede pegado al texto
-                  constraints:
-                      const BoxConstraints(), // elimina constraints extras para compactar
+                  iconSize: 24,
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
                 ),
               ],
             ),
