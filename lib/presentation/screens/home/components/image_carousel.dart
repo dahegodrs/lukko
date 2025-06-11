@@ -38,7 +38,7 @@ class _ImageCarouselState extends State<ImageCarousel> {
           height: 160,
           child: PageView.builder(
             controller: _controller,
-            itemCount: 4,
+            itemCount: 3,
             itemBuilder: (context, index) {
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),

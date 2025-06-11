@@ -5,6 +5,7 @@ import 'package:lukko/presentation/screens/newaccounts/new_account.dart';
 import 'package:lukko/domain/entities/cuenta.dart';
 import 'package:lukko/core/theme/app_colors.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:lukko/presentation/screens/account/account_detail_screen.dart';
 
 IconData obtenerIconoRed(String red) {
   switch (red.toLowerCase()) {
@@ -144,7 +145,13 @@ class AccountListScreen extends StatelessWidget {
                                 color: Color(0xFFA8A8A8),
                               ),
                               onPressed: () {
-                                debugPrint('Ver detalles de ${cuenta.nombre}');
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        AccountDetailScreen(cuenta: cuenta),
+                                  ),
+                                );
                               },
                             ),
                           ],
