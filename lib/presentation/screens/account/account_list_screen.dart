@@ -5,7 +5,8 @@ import 'package:lukko/presentation/screens/newaccounts/new_account.dart';
 import 'package:lukko/domain/entities/cuenta.dart';
 import 'package:lukko/core/theme/app_colors.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:lukko/presentation/screens/account/account_detail_screen.dart';
+
+import 'package:lukko/routes/app_router.dart';
 
 IconData obtenerIconoRed(String red) {
   switch (red.toLowerCase()) {
@@ -145,12 +146,10 @@ class AccountListScreen extends StatelessWidget {
                                 color: Color(0xFFA8A8A8),
                               ),
                               onPressed: () {
-                                Navigator.push(
+                                Navigator.pushNamed(
                                   context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        AccountDetailScreen(cuenta: cuenta),
-                                  ),
+                                  AppRouter.accountDetail,
+                                  arguments: index,
                                 );
                               },
                             ),
@@ -170,13 +169,11 @@ class AccountListScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         selectedItemColor: const Color.fromRGBO(1, 209, 219, 1),
         unselectedItemColor: Colors.grey,
-        currentIndex: 1, // puedes manejar el índice si quieres
+        currentIndex: 1,
         onTap: (index) async {
           switch (index) {
             case 0:
-              Navigator.pop(
-                context,
-              ); // O ir a la pantalla home si tienes ruta nombrada
+              Navigator.pop(context);
               break;
             case 1:
               final nuevaCuenta = await Navigator.push<Cuenta>(
@@ -190,9 +187,6 @@ class AccountListScreen extends StatelessWidget {
               }
               break;
             case 2:
-              // Aquí pon la navegación al menú o configuración
-              // Por ejemplo:
-              // Navigator.pushNamed(context, '/menu');
               break;
           }
         },

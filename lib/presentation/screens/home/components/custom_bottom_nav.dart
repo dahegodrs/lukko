@@ -10,7 +10,7 @@ class CustomBottomNav extends StatelessWidget {
       backgroundColor: Colors.white,
       selectedItemColor: const Color.fromRGBO(1, 209, 219, 1),
       unselectedItemColor: Colors.grey,
-      currentIndex: 0, // Puedes parametrizar esto luego
+      currentIndex: 0,
       onTap: (index) {
         switch (index) {
           case 0:
@@ -20,7 +20,6 @@ class CustomBottomNav extends StatelessWidget {
             Navigator.pushNamed(context, AppRouter.accountList);
             break;
           case 2:
-            // Acción para Menú
             break;
         }
       },

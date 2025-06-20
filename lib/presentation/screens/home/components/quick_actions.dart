@@ -15,9 +15,7 @@ class QuickActionsPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ConstrainedBox(
-      constraints: const BoxConstraints(
-        maxHeight: 130, // Previene overflow
-      ),
+      constraints: const BoxConstraints(maxHeight: 130),
       child: GridView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
@@ -76,7 +74,7 @@ class QuickActionsPanel extends StatelessWidget {
   }
 
   void _handleAction(BuildContext context, int index) {
-    debugPrint('Action tapped: $index'); // Para debug
+    debugPrint('Action tapped: $index');
 
     switch (index) {
       case 0: // Agregar

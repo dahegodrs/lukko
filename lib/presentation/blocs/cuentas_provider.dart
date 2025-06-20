@@ -72,8 +72,43 @@ class CuentasProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void agregarMovimiento(int indexCuenta, Movimiento movimiento) {
-    _cuentas[indexCuenta].movimientos.add(movimiento);
+  void agregarMovimiento(int cuentaIndex, Movimiento movimiento) {
+    _cuentas[cuentaIndex].movimientos.add(movimiento);
+    recalcularTotales(cuentaIndex);
+    notifyListeners();
+  }
+
+  void editarMovimiento({
+    required int indexCuenta,
+    required int indexMovimiento,
+    required Movimiento nuevoMovimiento,
+  }) {
+    if (indexCuenta >= 0 &&
+        indexCuenta < _cuentas.length &&
+        indexMovimiento >= 0 &&
+        indexMovimiento < _cuentas[indexCuenta].movimientos.length) {
+      _cuentas[indexCuenta].movimientos[indexMovimiento] = nuevoMovimiento;
+      notifyListeners();
+    }
+  }
+
+  void recalcularTotales(int indexCuenta) {
+    final cuenta = _cuentas[indexCuenta];
+
+    int ingresos = 0;
+    int gastos = 0;
+
+    for (var movimiento in cuenta.movimientos) {
+      if (movimiento.tipo == 'ingreso') {
+        ingresos += movimiento.valor;
+      } else if (movimiento.tipo == 'gasto') {
+        gastos += movimiento.valor;
+      }
+    }
+
+    cuenta.cupo = ingresos; // cupo disponible actual = total ingresos
+    cuenta.deuda = gastos; // deuda actual = total gastos
+
     notifyListeners();
   }
 

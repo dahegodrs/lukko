@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lukko/core/theme/app_colors.dart';
 import 'package:provider/provider.dart';
 import 'package:lukko/domain/entities/cuenta.dart';
+import 'package:lukko/domain/entities/movimiento.dart';
 import 'package:lukko/presentation/blocs/cuentas_provider.dart';
 
 class NewAccountScreen extends StatefulWidget {
@@ -34,7 +35,20 @@ class _NewAccountScreenState extends State<NewAccountScreen> {
         cupo: int.tryParse(_cupoController.text) ?? 0,
         deuda: int.tryParse(_deudaController.text) ?? 0,
         red: _selectedRed,
+        movimientos: [],
       );
+
+      if (nuevaCuenta.deuda > 0) {
+        nuevaCuenta.movimientos.add(
+          Movimiento(
+            titulo: 'Deuda inicial',
+            descripcion: 'Registro automático',
+            categoria: 'otros',
+            valor: nuevaCuenta.deuda,
+            tipo: 'gasto',
+          ),
+        );
+      }
 
       Provider.of<CuentasProvider>(
         context,
@@ -143,7 +157,7 @@ class _NewAccountScreenState extends State<NewAccountScreen> {
         hintStyle: TextStyle(color: hintColor),
         labelStyle: TextStyle(color: textColor),
         filled: true,
-        fillColor: Colors.white, // Fondo blanco para que contraste con el borde
+        fillColor: Colors.white,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: const BorderSide(color: Colors.grey),
@@ -245,7 +259,6 @@ class CustomBottomNavWithAdd extends StatelessWidget {
             Navigator.pushReplacementNamed(context, '/home');
             break;
           case 1:
-            // Ya estás en "Agregar", no hacer nada
             break;
           case 2:
             Navigator.pushReplacementNamed(context, '/menu');

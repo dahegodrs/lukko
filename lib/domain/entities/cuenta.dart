@@ -1,11 +1,11 @@
 import 'movimiento.dart';
 
 class Cuenta {
-  final String nombre;
-  final int cupo;
-  final int deuda;
-  final String red;
-  final List<Movimiento> movimientos;
+  String nombre;
+  int cupo;
+  int deuda;
+  String red;
+  List<Movimiento> movimientos;
 
   Cuenta({
     required this.nombre,

@@ -8,7 +8,8 @@ import '../presentation/screens/account/account_list_screen.dart';
 import '../presentation/screens/newaccounts/new_account.dart';
 import '../presentation/screens/account/account_detail_screen.dart';
 import '../../../core/theme/app_colors.dart';
-import '../domain/entities/cuenta.dart';
+
+import 'package:lukko/presentation/screens/editmovements/add_edit_movimiento_screen.dart';
 
 class AppRouter {
   // Definimos rutas como constantes
@@ -18,6 +19,7 @@ class AppRouter {
   static const String accountList = '/account-list';
   static const String newAccount = '/new-account';
   static const String accountDetail = '/account-detail';
+  static const String addOrEditMovimiento = '/add-or-edit-movimiento';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -32,9 +34,18 @@ class AppRouter {
       case newAccount:
         return MaterialPageRoute(builder: (_) => const NewAccountScreen());
       case accountDetail:
-        final cuenta = settings.arguments as Cuenta;
+        final cuentaIndex = settings.arguments as int;
         return MaterialPageRoute(
-          builder: (_) => AccountDetailScreen(cuenta: cuenta),
+          builder: (_) => AccountDetailScreen(cuentaIndex: cuentaIndex),
+        );
+      case addOrEditMovimiento:
+        final args = settings.arguments as Map<String, dynamic>;
+        return MaterialPageRoute(
+          builder: (_) => AddOrEditMovimientoScreen(
+            cuentaIndex: args['cuentaIndex'],
+            movimiento: args['movimiento'],
+            movimientoIndex: args['movimientoIndex'],
+          ),
         );
       default:
         return _errorRoute(settings.name ?? 'unknown');
